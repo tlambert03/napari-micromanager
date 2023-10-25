@@ -208,7 +208,7 @@ class MicroManagerToolbar(QMainWindow):
 
 
 class MMToolBar(QToolBar):
-    def __init__(self, title: str, parent: QWidget = None) -> None:
+    def __init__(self, title: str, parent: QWidget | None = None) -> None:
         super().__init__(title, parent)
         self.setMinimumHeight(48)
         self.setObjectName(f"MM-{title}")
@@ -224,21 +224,21 @@ class MMToolBar(QToolBar):
 
 
 class ConfigToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Configuration", parent)
         self.addSubWidget(ConfigurationWidget())
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
 
 class ObjectivesToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Objectives", parent=parent)
         self._wdg = ObjectivesWidget()
         self.addSubWidget(self._wdg)
 
 
 class ChannelsToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Channels", parent)
         self.addSubWidget(QLabel(text="Channel:"))
         self.addSubWidget(ChannelGroupWidget())
@@ -246,14 +246,14 @@ class ChannelsToolBar(MMToolBar):
 
 
 class ExposureToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Exposure", parent)
         self.addSubWidget(QLabel(text="Exposure:"))
         self.addSubWidget(DefaultCameraExposureWidget())
 
 
 class SnapLiveToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Snap Live", parent)
         snap_btn = SnapButton()
         snap_btn.setText("")
@@ -310,6 +310,6 @@ class ToolsToolBar(MMToolBar):
 
 
 class ShuttersToolBar(MMToolBar):
-    def __init__(self, parent: QWidget) -> None:
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__("Shutters", parent)
         self.addSubWidget(MMShuttersWidget())

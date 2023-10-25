@@ -97,6 +97,7 @@ ignore = [
     "D212", # Multi-line docstring summary should start at the first line
     "D213", # Multi-line docstring summary should start at the second line
     "D400", # First line should end with a period
+    "D404", # First word of the docstring should not be `This`
     "D413", # Missing blank line after last section
     "D416", # Section name should end with a colon
     "C901", # Function is too complex
