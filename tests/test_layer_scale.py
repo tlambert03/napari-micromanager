@@ -5,10 +5,10 @@ from typing import TYPE_CHECKING
 import pytest
 from napari_micromanager._mda_handler import _NapariMDAHandler
 from napari_micromanager._mda_meta import SEQUENCE_META_KEY, SequenceMeta
-from pymmcore_plus import CMMCorePlus
 
 if TYPE_CHECKING:
     from napari_micromanager.main_window import MainWindow
+    from pymmcore_plus import CMMCorePlus
     from useq import MDASequence
 
 
@@ -17,10 +17,10 @@ def test_layer_scale(
     make_napari_viewer,
     mda_sequence_splits: MDASequence,
     axis_order: str,
+    core: CMMCorePlus,
 ) -> None:
-    mmc = CMMCorePlus.instance()
-    mmc.loadSystemConfiguration()
     viewer = make_napari_viewer()
+    mmc = core
     handler = _NapariMDAHandler(mmc, viewer)
 
     mmc.setProperty("Objective", "Label", "Nikon 20X Plan Fluor ELWD")
@@ -66,12 +66,8 @@ def test_layer_scale(
 
 
 def test_preview_scale(core: CMMCorePlus, main_window: MainWindow):
-    """Basic test to check that the main window can be created.
-
-    This test should remain fast.
-    """
     img = core.snap()
-    main_window._update_viewer(img)
+    main_window._core_link._update_viewer(img)
 
     pix_size = core.getPixelSizeUm()
     assert tuple(main_window.viewer.layers["preview"].scale) == (pix_size, pix_size)
@@ -82,7 +78,7 @@ def test_preview_scale(core: CMMCorePlus, main_window: MainWindow):
     core.setPixelSizeUm("Res20x", 0)
 
     try:
-        main_window._update_viewer(img)
+        main_window._core_link._update_viewer(img)
     except Exception as e:
         # return to orig value for future tests and re-raise
         core.setPixelSizeUm(pix_size)
