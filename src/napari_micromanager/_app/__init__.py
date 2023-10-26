@@ -24,7 +24,8 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from .._gui_objects import _toolbar as tb
+from napari_micromanager._core_link import CoreViewerLink
+from napari_micromanager._gui_objects import _toolbar as tb
 
 if TYPE_CHECKING:
     from qtpy.QtWidgets import QMainWindow, QMenuBar
@@ -146,7 +147,9 @@ class MMNapari:
         if viewer is None:
             viewer = napari.Viewer()
         self._napari_viewer = viewer
+
         self._qmain_window: QMainWindow = self._napari_viewer.window._qt_window
+        self._core_link = CoreViewerLink(viewer, core, self._qmain_window)
 
         # Add micromanager menu
         menu_bar = cast("QMenuBar", self._qmain_window.menuBar())
@@ -155,16 +158,20 @@ class MMNapari:
         for tbar in self._tools.toolbars:
             self._qmain_window.addToolBar(tbar)
             self._qmain_window.update()
-            print(self._qmain_window.sizeHint())
-            print(self._qmain_window.updateGeometry())
-            print(self._qmain_window.width())
-            print(self._qmain_window.geometry())
 
         # append toolbars to windows menu
         wm = (act.menu() for act in menu_bar.actions() if act.text().endswith("Window"))
         if win_menu := cast("QMenu | None", next(wm, None)):
             win_menu.addSeparator()
             win_menu.addMenu(self._tools)
+
+        from app_model.backends.qt import QCommandRuleAction
+
+        from ._actions import ACTIONS, app
+
+        c = self._qmain_window.addToolBar("Cuttlefish")
+        for act in ACTIONS:
+            c.addAction(QCommandRuleAction(act, app, viewer.window._qt_window))
 
 
 def main() -> None:

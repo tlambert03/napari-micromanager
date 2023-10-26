@@ -89,6 +89,7 @@ select = [
     "A001", # flake8-builtins
     "RUF",  # ruff-specific rules
     "TCH",  # flake8-type-checking
+    "TID",  # tidy import
 ]
 ignore = [
     "D100", # Missing docstring in public module
@@ -126,6 +127,7 @@ disallow_any_generics = false
 disallow_subclassing_any = false
 show_error_codes = true
 pretty = true
+plugins = ['pydantic.mypy']
 
 [[tool.mypy.overrides]]
 module = [
