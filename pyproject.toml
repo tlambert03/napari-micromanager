@@ -72,7 +72,6 @@ dev = [
     "rich>=14.0.0",
     "ruff>=0.11.8",
 ]
-docs = ["mkdocs-material>=9.6.12", "mkdocstrings-python>=1.16.10"]
 
 [project.urls]
 Source = "https://github.com/pymmcore-plus/napari-micromanager"
@@ -174,7 +173,7 @@ ignore = [
     ".pre-commit-config.yaml",
     "launch-dev.py",
     "codecov.yml",
-    "mkdocs.yml",
+    "zensical.toml",
     "docs/**",
     "uv.lock",
 ]

@@ -1,0 +1,5 @@
+title: napari-micromanager
+nav:
+  - Overview: index.md
+  - getting_started.md
+  - scripting.md

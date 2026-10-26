@@ -1,31 +1,48 @@
+# Docs for this repo are built as part of the unified pymmcore-plus site:
+# https://github.com/pymmcore-plus/pymmcore-plus.github.io
+#
+# - Pull requests build the whole site with this PR's changes (failing only on
+#   warnings in this repo's pages); download the "site" artifact to browse it.
+# - Pushes to main trigger a rebuild + deploy of the site.
 name: docs
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 on:
+  pull_request:
+    paths: &paths
+      - "docs/**"
+      - "src/**"
+      - "examples/**"
+      - "README.md"
+      - "zensical.toml"
+      - ".github/workflows/docs.yml"
   push:
     branches: [main]
-  pull_request:
+    paths: *paths
+  workflow_dispatch:
 
 jobs:
+  build:
+    if: github.event_name == 'pull_request'
+    uses: pymmcore-plus/pymmcore-plus.github.io/.github/workflows/build.yml@main
+    with:
+      member: napari-micromanager
+      repository: ${{ github.event.pull_request.head.repo.full_name }}
+      ref: ${{ github.event.pull_request.head.sha }}
+
   deploy:
-    runs-on: macos-latest
+    if: github.event_name != 'pull_request' && github.repository_owner == 'pymmcore-plus'
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-
-      - uses: astral-sh/setup-uv@v7
+      - uses: actions/create-github-app-token@v2
+        id: app-token
         with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: uv sync --no-dev --group docs
-
-      - name: Test docs
-        if: github.event_name == 'pull_request'
-        run: uv run mkdocs build --strict
-
-      - name: Deploy docs
-        if: github.ref == 'refs/heads/main'
-        run: uv run mkdocs gh-deploy --force
+          app-id: ${{ vars.DOCS_APP_ID }}
+          private-key: ${{ secrets.DOCS_APP_PRIVATE_KEY }}
+          owner: pymmcore-plus
+          repositories: pymmcore-plus.github.io
+      - name: Trigger site deploy
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: >
+          gh workflow run deploy.yml -R pymmcore-plus/pymmcore-plus.github.io
+          -f source="${{ github.repository }}@${{ github.sha }}"

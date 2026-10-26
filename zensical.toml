@@ -1,0 +1,9 @@
+# napari-micromanager docs are published as part of the unified pymmcore-plus
+# site, composed by https://github.com/pymmcore-plus/pymmcore-plus.github.io.
+[project]
+site_name = "napari-micromanager"
+site_url = "https://pymmcore-plus.github.io/napari-micromanager/"
+repo_url = "https://github.com/pymmcore-plus/napari-micromanager"
+edit_uri = "edit/main/docs/"
+
+[project.plugins.awesome-nav]
