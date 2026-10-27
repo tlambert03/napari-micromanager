@@ -1,5 +1,7 @@
+# Navigation for napari-micromanager in the unified docs.  The hub places this
+# folder under Applications.
 title: napari-micromanager
 nav:
-  - Overview: index.md
-  - getting_started.md
-  - scripting.md
+  - index.md
+  - Install and Launch: getting_started.md
+  - Scripting: scripting.md
